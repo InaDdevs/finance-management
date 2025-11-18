@@ -24,21 +24,21 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const Center(
-              child: Text('usuario@email.com'),
+              child: Text('admin@email.com'),
             ),
             const Divider(height: 40),
             ListTile(
-              leading: const Icon(Icons.settings),
+              leading: const Icon(Icons.settings, color: Colors.blue),
               title: const Text('Configurações da Conta'),
               onTap: () {},
             ),
             ListTile(
-              leading: const Icon(Icons.category),
+              leading: const Icon(Icons.category, color: Colors.blue),
               title: const Text('Gerenciar Categorias'),
               onTap: () {},
             ),
             ListTile(
-              leading: const Icon(Icons.account_balance),
+              leading: const Icon(Icons.account_balance, color: Colors.blue),
               title: const Text('Gerenciar Contas'),
               onTap: () {},
             ),

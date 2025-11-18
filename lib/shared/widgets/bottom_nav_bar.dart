@@ -59,13 +59,16 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
       floatingActionButton: FloatingActionButton(
         onPressed: _openNewTransactionForm,
         elevation: 2.0,
+        backgroundColor: Color(0xFFC0DAE5), // <-- ADICIONE: Cor de fundo
+        foregroundColor: Colors.black, // <-- ADICIONE: Cor do ícone (+)
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
       bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 6.0,
+            color: Color(0xFFC0DAE5), // <-- CORRIGIDO AQUI
+            shape: const CircularNotchedRectangle(),
+            notchMargin: 6.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -85,7 +88,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
     final isSelected = (pageIndex == _currentIndex);
 
     return IconButton(
-      icon: Icon(icon, color: isSelected ? Theme.of(context).primaryColor : Colors.black
+      icon: Icon(icon, color: isSelected ? Colors.blue : Colors.black
       ),
       tooltip: label,
       onPressed: () => _onTap(index),
