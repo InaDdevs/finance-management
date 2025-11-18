@@ -1,21 +1,42 @@
 // lib/core/dart/database/database_helper.dart
+import 'dart:async'; // <--- ADICIONE ESTA IMPORTAÇÃO
+
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-
-// Importação corrigida: Sobe 3 níveis (de database/dart/core para lib/)
 import '../../../models/transaction_model.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
-  static Database? _database;
-
   DatabaseHelper._init();
 
+  // --- MUDANÇA AQUI ---
+  // Vamos usar um 'Completer' para gerenciar a inicialização
+  static Database? _database;
+  static Completer<Database>? _dbCompleter;
+
   Future<Database> get database async {
+    // Se o banco de dados já foi inicializado, retorne-o
     if (_database != null) return _database!;
-    _database = await _initDB('transactions.db'); // Agora _initDB existe
-    return _database!;
+
+    // Se o banco de dados ESTÁ inicializando, espere pelo 'completer'
+    if (_dbCompleter != null) {
+      return _dbCompleter!.future;
+    }
+
+    // Se formos os primeiros, iniciamos o completer e a inicialização
+    _dbCompleter = Completer<Database>();
+    try {
+      final db = await _initDB('transactions.db');
+      _database = db;
+      _dbCompleter!.complete(db); // Libera todos que estavam esperando
+    } catch (e) {
+      _dbCompleter!.completeError(e); // Em caso de erro
+    }
+
+    return _dbCompleter!.future;
   }
+  // --- FIM DA MUDANÇA ---
+
 
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
@@ -25,6 +46,7 @@ class DatabaseHelper {
   }
 
   Future _createDB(Database db, int version) async {
+    // ... (Seu código de _createDB não muda) ...
     const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     const textType = 'TEXT NOT NULL';
     const realType = 'REAL NOT NULL';
@@ -47,7 +69,32 @@ class DatabaseHelper {
     ''');
   }
 
-  // --- OPERAÇÕES CRUD ---
+  // --- OPERAÇÕES CRUD (Não mudam) ---
+
+  // Retorna um resumo de despesas por categoria
+  Future<Map<String, double>> getExpenseSummaryByCategory(DateTime start, DateTime end) async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery('''
+      SELECT category, SUM(value) as total
+      FROM transactions
+      WHERE type = 'despesa' AND status = 'pago' AND dueDate BETWEEN ? AND ?
+      GROUP BY category
+      ORDER BY total DESC
+    ''', [start.toIso8601String(), end.toIso8601String()]);
+
+    return { for (var item in maps) item['category'] : (item['total'] as num).toDouble() };
+  }
+
+  Future<List<TransactionModel>> getAllTransactionsByDate(DateTime start, DateTime end) async {
+    final db = await instance.database;
+    final maps = await db.query(
+      'transactions',
+      where: 'dueDate BETWEEN ? AND ?', // Correto (sem status)
+      whereArgs: [start.toIso8601String(), end.toIso8601String()],
+      orderBy: 'dueDate DESC',
+    );
+    return maps.map((json) => TransactionModel.fromMap(json)).toList();
+  }
 
   Future<int> create(TransactionModel transaction) async {
     final db = await instance.database;
@@ -62,7 +109,6 @@ class DatabaseHelper {
       whereArgs: ['despesa', status == 'todos' ? '%' : status],
       orderBy: 'dueDate ASC',
     );
-    // Erro 'TransactionModel' not found (agora corrigido pela importação)
     return maps.map((json) => TransactionModel.fromMap(json)).toList();
   }
 
@@ -84,7 +130,6 @@ class DatabaseHelper {
     final sumDespesas = await db.rawQuery(
         "SELECT SUM(value) as total FROM transactions WHERE type = 'despesa' AND status = 'pago'");
 
-    // Adicionado .toDouble() para segurança de tipo
     double receitas = (sumReceitas.first['total'] as num?)?.toDouble() ?? 0.0;
     double despesas = (sumDespesas.first['total'] as num?)?.toDouble() ?? 0.0;
 
