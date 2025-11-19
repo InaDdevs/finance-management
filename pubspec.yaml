@@ -16,6 +16,7 @@ dependencies:
   path: ^1.9.0 # Para encontrar o caminho do banco de dados
   intl: ^0.19.0 # Para formatter de datas e moeda
   provider: ^6.1.2 # Para gerenciamento de estado (opcional, mas recomendado)
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
