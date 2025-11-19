@@ -1,4 +1,3 @@
-// lib/features/profile/manage_accounts_screen.dart
 import 'package:flutter/material.dart';
 
 class ManageAccountsScreen extends StatelessWidget {

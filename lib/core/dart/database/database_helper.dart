@@ -1,6 +1,4 @@
-// lib/core/dart/database/database_helper.dart
-import 'dart:async'; // <--- ADICIONE ESTA IMPORTAÇÃO
-
+import 'dart:async';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../../../models/transaction_model.dart';
@@ -9,44 +7,32 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
   DatabaseHelper._init();
 
-  // --- MUDANÇA AQUI ---
-  // Vamos usar um 'Completer' para gerenciar a inicialização
   static Database? _database;
   static Completer<Database>? _dbCompleter;
 
   Future<Database> get database async {
-    // Se o banco de dados já foi inicializado, retorne-o
     if (_database != null) return _database!;
+    if (_dbCompleter != null) return _dbCompleter!.future;
 
-    // Se o banco de dados ESTÁ inicializando, espere pelo 'completer'
-    if (_dbCompleter != null) {
-      return _dbCompleter!.future;
-    }
-
-    // Se formos os primeiros, iniciamos o completer e a inicialização
     _dbCompleter = Completer<Database>();
     try {
       final db = await _initDB('transactions.db');
       _database = db;
-      _dbCompleter!.complete(db); // Libera todos que estavam esperando
+      _dbCompleter!.complete(db);
     } catch (e) {
-      _dbCompleter!.completeError(e); // Em caso de erro
+      _dbCompleter!.completeError(e);
     }
 
     return _dbCompleter!.future;
   }
-  // --- FIM DA MUDANÇA ---
-
 
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   Future _createDB(Database db, int version) async {
-    // ... (Seu código de _createDB não muda) ...
     const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     const textType = 'TEXT NOT NULL';
     const realType = 'REAL NOT NULL';
@@ -69,9 +55,6 @@ class DatabaseHelper {
     ''');
   }
 
-  // --- OPERAÇÕES CRUD (Não mudam) ---
-
-  // Retorna um resumo de despesas por categoria
   Future<Map<String, double>> getExpenseSummaryByCategory(DateTime start, DateTime end) async {
     final db = await instance.database;
     final List<Map<String, dynamic>> maps = await db.rawQuery('''
@@ -89,7 +72,7 @@ class DatabaseHelper {
     final db = await instance.database;
     final maps = await db.query(
       'transactions',
-      where: 'dueDate BETWEEN ? AND ?', // Correto (sem status)
+      where: 'dueDate BETWEEN ? AND ?',
       whereArgs: [start.toIso8601String(), end.toIso8601String()],
       orderBy: 'dueDate DESC',
     );
@@ -153,6 +136,66 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  Future<double> getMonthlyTotal({required bool isIncome}) async {
+    final db = await instance.database;
+    final now = DateTime.now();
+
+    final startOfMonth = DateTime(now.year, now.month, 1).toIso8601String();
+    final endOfMonth = DateTime(now.year, now.month + 1, 0, 23, 59, 59).toIso8601String();
+
+    final String type = isIncome ? 'receita' : 'despesa';
+
+    final result = await db.rawQuery('''
+      SELECT SUM(value) as total 
+      FROM transactions 
+      WHERE type = ? AND dueDate BETWEEN ? AND ?
+    ''', [type, startOfMonth, endOfMonth]);
+
+    if (result.isNotEmpty && result.first['total'] != null) {
+      return double.tryParse(result.first['total'].toString()) ?? 0.0;
+    }
+    return 0.0;
+  }
+
+  Future<List<TransactionModel>> getUpcomingTransactions({int days = 7}) async {
+    final db = await instance.database;
+    final now = DateTime.now();
+
+    final startOfToday = DateTime(now.year, now.month, now.day);
+    final futureDate = startOfToday.add(Duration(days: days));
+
+    final result = await db.query(
+      'transactions',
+      where: 'type = ? AND status = ? AND dueDate BETWEEN ? AND ?',
+      whereArgs: [
+        'despesa',
+        'pendente',
+        startOfToday.toIso8601String(),
+        futureDate.toIso8601String()
+      ],
+      orderBy: 'dueDate ASC',
+    );
+
+    return result.map((json) => TransactionModel.fromMap(json)).toList();
+  }
+
+  Future<Map<String, double>> getMonthlyCategorySummary() async {
+    final db = await instance.database;
+    final now = DateTime.now();
+    final startOfMonth = DateTime(now.year, now.month, 1).toIso8601String();
+    final endOfMonth = DateTime(now.year, now.month + 1, 0, 23, 59, 59).toIso8601String();
+
+    final List<Map<String, dynamic>> maps = await db.rawQuery('''
+      SELECT category, SUM(value) as total
+      FROM transactions
+      WHERE type = 'despesa' AND dueDate BETWEEN ? AND ?
+      GROUP BY category
+      ORDER BY total DESC
+    ''', [startOfMonth, endOfMonth]);
+
+    return { for (var item in maps) item['category'] : (item['total'] as num).toDouble() };
   }
 
   Future close() async {

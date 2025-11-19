@@ -1,9 +1,8 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// Importações corrigidas para sua estrutura
-import 'core/dart/providers/transaction_provider.dart'; // Caminho ajustado
+
+import 'core/dart/providers/transaction_provider.dart';
 import 'features/auth/login_screen.dart';
 import 'features/auth/register_screen.dart';
 import 'features/transactions/transaction_form_screen.dart';
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Erro 'TransactionProvider' isn't defined (agora corrigido)
+
     return ChangeNotifierProvider(
       create: (context) => TransactionProvider(),
       child: MaterialApp(

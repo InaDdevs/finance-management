@@ -1,4 +1,3 @@
-// lib/features/auth/register_screen.dart
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -17,14 +16,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _register() {
     if (_formKey.currentState!.validate()) {
-      // Lógica de cadastro (chamar um Firebase Auth, API, etc.)
-      // ...
-
-      // Após sucesso, pode navegar para o login ou direto pro dashboard
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Cadastro realizado com sucesso!')),
       );
-      Navigator.of(context).pop(); // Volta para a tela de login
+      Navigator.of(context).pop();
     }
   }
 
@@ -40,12 +35,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Nome (opcional)'), // [cite: 25]
+                decoration: const InputDecoration(labelText: 'Nome (opcional)'),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _emailController,
-                decoration: const InputDecoration(labelText: 'E-mail'), // [cite: 28]
+                decoration: const InputDecoration(labelText: 'E-mail'),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty || !value.contains('@')) {
@@ -57,7 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Senha'), // [cite: 29]
+                decoration: const InputDecoration(labelText: 'Senha'),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.length < 6) {
@@ -69,7 +64,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _confirmPasswordController,
-                decoration: const InputDecoration(labelText: 'Confirmação de Senha'), // [cite: 30]
+                decoration: const InputDecoration(labelText: 'Confirmação de Senha'),
                 obscureText: true,
                 validator: (value) {
                   if (value != _passwordController.text) {
@@ -81,7 +76,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: _register,
-                child: const Text('Cadastrar'), // [cite: 31]
+                child: const Text('Cadastrar'),
               ),
             ],
           ),

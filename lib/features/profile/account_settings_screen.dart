@@ -1,4 +1,3 @@
-// lib/features/profile/account_settings_screen.dart
 import 'package:flutter/material.dart';
 
 class AccountSettingsScreen extends StatelessWidget {

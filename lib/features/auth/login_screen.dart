@@ -1,6 +1,4 @@
-// lib/features/auth/login_screen.dart
 import 'package:flutter/material.dart';
-// ADICIONE ESTA LINHA SE VOCÊ JÁ INSTALOU O PACOTE 'url_launcher'
 import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -10,26 +8,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Adicionando os controladores que faltavam no seu snippet
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   void _login() {
-    // Lógica de login (autenticação)
-    // ...
-    // Após o sucesso, navega para o dashboard
     Navigator.of(context).pushReplacementNamed('/dashboard');
   }
 
   @override
   void dispose() {
-    // É importante fazer o dispose dos controladores
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  // Comentário original: esqueci o meu cu
   void _showRecoveryDialog() {
     showDialog(
       context: context,
@@ -52,16 +44,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   'Em breve, ao clicar neste botão, você será direcionado para um fluxo de recuperação utilizando a autenticação do Google.',
                   style: TextStyle(fontStyle: FontStyle.normal),
                 ),
-                // >>> NOVO ESPAÇAMENTO E BOTÃO <<<
                 const SizedBox(height: 24),
-
-                // Trecho MODIFICADO para reduzir o tamanho e arredondar as bordas
                 Center(
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0), // Arredondamento
+                    borderRadius: BorderRadius.circular(8.0),
                     child: TextButton(
                       style: TextButton.styleFrom(
-                        // Cor de fundo e controle de tamanho através do padding
                         backgroundColor: const Color(0xFFC0DAE5),
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       ),
@@ -73,10 +61,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           await launchUrl(googleRecoveryUrl, mode: LaunchMode.externalApplication);
                         }
 
-                        Navigator.of(context).pop(); // Fecha o diálogo
+                        Navigator.of(context).pop();
                       },
                       child: const Row(
-                        mainAxisSize: MainAxisSize.min, // Ocupa o mínimo de largura
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.g_mobiledata, color: Colors.black),
                           SizedBox(width: 8),
@@ -89,7 +77,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                // FIM DA MODIFICAÇÃO
               ],
             ),
           ),
@@ -113,14 +100,9 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
-
-          // 2. Faz os filhos (como ElevatedButton) esticarem na horizontal
           crossAxisAlignment: CrossAxisAlignment.stretch,
-
           children: [
-            // Adicionando os campos de texto que faltavam
             TextFormField(
               controller: _emailController,
               decoration: const InputDecoration(labelText: 'E-mail'),
@@ -133,19 +115,14 @@ class _LoginScreenState extends State<LoginScreen> {
               obscureText: true,
             ),
             const SizedBox(height: 32),
-
-            // Este botão será esticado para preencher a largura
             ElevatedButton(
               onPressed: _login,
               child: const Text('Entrar'),
             ),
-
-            // 3. Centraliza os botões de texto horizontalmente // KAUAN AWOOO
             Center(
               child: TextButton(
                 onPressed: _showRecoveryDialog,
                 child: const Text('Esqueci a Senha'),
-                // KAUAN AWOOO
               ),
             ),
             Center(
