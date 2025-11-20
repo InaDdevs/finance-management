@@ -1,23 +1,19 @@
-// lib/models/transaction_model.dart
 import 'package:flutter/material.dart';
 
-// Enum para o tipo de transação [cite: 60]
 enum TransactionType { receita, despesa }
 
-// Enum para o status da transação [cite: 98]
 enum TransactionStatus { pendente, pago }
 
 class TransactionModel {
   int? id;
-  TransactionType type; // [cite: 60]
-  double value; // [cite: 62]
-  String description; // [cite: 65]
-  DateTime dueDate; // Data de Vencimento/Previsão [cite: 68]
-  DateTime? paymentDate; // Data de Pagamento/Recebimento (opcional) [cite: 73]
-  String category; // [cite: 83]
-  String account; // [cite: 78]
-  TransactionStatus status; // [cite: 98]
-  // Campos opcionais [cite: 90, 100]
+  TransactionType type;
+  double value;
+  String description;
+  DateTime dueDate;
+  DateTime? paymentDate;
+  String category;
+  String account;
+  TransactionStatus status;
   String? recurrence;
   String? attachmentPath;
 
@@ -35,7 +31,6 @@ class TransactionModel {
     this.attachmentPath,
   });
 
-  // Converte um Map (do SQLite) para o modelo
   factory TransactionModel.fromMap(Map<String, dynamic> map) {
     return TransactionModel(
       id: map['id'],
@@ -52,7 +47,6 @@ class TransactionModel {
     );
   }
 
-  // Converte o modelo para um Map (para o SQLite)
   Map<String, dynamic> toMap() {
     return {
       'id': id,

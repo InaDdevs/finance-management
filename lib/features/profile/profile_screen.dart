@@ -1,19 +1,15 @@
-// lib/features/profile/profile_screen.dart
 import 'package:flutter/material.dart';
 import '../reports/reports_screen.dart';
 
-// --- ADICIONE ESTAS IMPORTAÇÕES ---
 import 'account_settings_screen.dart';
 import 'manage_categories_screen.dart';
 import 'manage_accounts_screen.dart';
-// --- FIM DAS IMPORTAÇÕES ---
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Defina a cor aqui para reutilizar
     final Color minhaCorDaBarra = Color(0xFFC0DAE5);
 
     return Scaffold(
@@ -42,8 +38,6 @@ class ProfileScreen extends StatelessWidget {
               child: Text('admin@email.com'),
             ),
             const Divider(height: 40),
-
-            // --- Bloco de Relatórios ---
             ListTile(
               leading: const Icon(Icons.bar_chart, color: Colors.blue),
               title: const Text('Relatórios'),
@@ -53,8 +47,6 @@ class ProfileScreen extends StatelessWidget {
                 );
               },
             ),
-
-            // --- Bloco de Configurações (ATUALIZADO) ---
             ListTile(
               leading: const Icon(Icons.settings, color: Colors.blue),
               title: const Text('Configurações da Conta'),
@@ -64,8 +56,6 @@ class ProfileScreen extends StatelessWidget {
                 );
               },
             ),
-
-            // --- Bloco de Gerenciar Categorias (ATUALIZADO) ---
             ListTile(
               leading: const Icon(Icons.category, color: Colors.blue),
               title: const Text('Gerenciar Categorias'),
@@ -75,8 +65,6 @@ class ProfileScreen extends StatelessWidget {
                 );
               },
             ),
-
-            // --- Bloco de Gerenciar Contas (ATUALIZADO) ---
             ListTile(
               leading: const Icon(Icons.account_balance, color: Colors.blue),
               title: const Text('Gerenciar Contas'),
@@ -86,8 +74,6 @@ class ProfileScreen extends StatelessWidget {
                 );
               },
             ),
-
-            // --- Bloco de Sair ---
             ListTile(
               leading: const Icon(Icons.logout, color: Colors.red),
               title: const Text('Sair', style: TextStyle(color: Colors.red)),
