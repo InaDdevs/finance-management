@@ -1,82 +1,196 @@
 import 'package:flutter/material.dart';
-import '../reports/reports_screen.dart';
 
+import '../reports/reports_screen.dart';
 import 'account_settings_screen.dart';
 import 'manage_categories_screen.dart';
 import 'manage_accounts_screen.dart';
 
+const Color _primaryColor = Color(0xFF273238);
+const Color _secondaryColor = Color(0xFFFFFFFF);
+const Color _accentColor = Color(0xFF4DD0E1);
+const Color _backgroundColor = Color(0xFF535760);
+const Color _cardColor = Color(0xFF2C3940);
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
+  Widget _buildProfileMenuItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    Color iconColor = Colors.white,
+    Color textColor = Colors.white,
+    bool isLogout = false,
+    required BuildContext context,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Material(
+        color: _cardColor,
+        borderRadius: BorderRadius.circular(12),
+        elevation: 4,
+        shadowColor: iconColor.withOpacity(0.2),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 16.0),
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  color: isLogout ? Colors.redAccent : iconColor,
+                  size: 24,
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: textColor.withOpacity(0.6),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Color minhaCorDaBarra = Color(0xFFC0DAE5);
+    const gradientBackground = BoxDecoration(
+      gradient: LinearGradient(
+        colors: [_backgroundColor, _primaryColor],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+    );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Perfil e Configurações')),
-      body: Center(
+      appBar: AppBar(
+        title: const Text('Perfil e Configurações', style: TextStyle(color: Colors.white)),
+        backgroundColor: _primaryColor,
+        elevation: 0,
+        centerTitle: true,
+      ),
+      body: Container(
+        decoration: gradientBackground,
         child: ListView(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundColor: minhaCorDaBarra.withOpacity(0.3),
-              child: Icon(
-                Icons.person,
-                size: 50,
-                color: minhaCorDaBarra.withOpacity(0.9),
+
+            Container(
+              padding: const EdgeInsets.only(bottom: 30),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: _primaryColor,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: _accentColor.withOpacity(0.5), width: 3),
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.person,
+                          size: 50,
+                          color: _accentColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Nome do Usuário',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 1.0,
+                    ),
+                  ),
+                  const Text(
+                    'admin@email.com',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: _secondaryColor,
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
-            const Center(
-              child: Text(
-                'Nome do Usuário',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const Center(
-              child: Text('admin@email.com'),
-            ),
-            const Divider(height: 40),
-            ListTile(
-              leading: const Icon(Icons.bar_chart, color: Colors.blue),
-              title: const Text('Relatórios'),
+
+
+
+            _buildProfileMenuItem(
+              context: context,
+              icon: Icons.bar_chart,
+              title: 'Relatórios',
+              iconColor: _accentColor,
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const ReportsScreen()),
                 );
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.settings, color: Colors.blue),
-              title: const Text('Configurações da Conta'),
+
+            _buildProfileMenuItem(
+              context: context,
+              icon: Icons.settings,
+              title: 'Configurações da Conta',
+              iconColor: _accentColor,
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const AccountSettingsScreen()),
                 );
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.category, color: Colors.blue),
-              title: const Text('Gerenciar Categorias'),
+
+            _buildProfileMenuItem(
+              context: context,
+              icon: Icons.category,
+              title: 'Gerenciar Categorias',
+              iconColor: _accentColor,
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const ManageCategoriesScreen()),
                 );
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.account_balance, color: Colors.blue),
-              title: const Text('Gerenciar Contas'),
+
+            _buildProfileMenuItem(
+              context: context,
+              icon: Icons.account_balance,
+              title: 'Gerenciar Contas',
+              iconColor: _accentColor,
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const ManageAccountsScreen()),
                 );
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.logout, color: Colors.red),
-              title: const Text('Sair', style: TextStyle(color: Colors.red)),
+            const SizedBox(height: 30),
+
+
+            _buildProfileMenuItem(
+              context: context,
+              icon: Icons.logout,
+              title: 'Sair',
+              iconColor: Colors.redAccent,
+              textColor: Colors.redAccent,
+              isLogout: true,
               onTap: () {
                 Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
               },
