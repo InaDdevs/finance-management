@@ -8,15 +8,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Cores da Marca
-  static const Color primaryColor = Color(0xFF0D47A1); // Azul Escuro (similar ao logo)
-  static const Color accentColor = Color(0xFF42A5F5); // Azul Claro (similar ao logo)
+  static const Color primaryColor = Color(0xFF0D47A1);
+  static const Color accentColor = Color(0xFF42A5F5);
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   void _login() {
-    // Lógica de Login Aqui (por enquanto, apenas navega)
     Navigator.of(context).pushReplacementNamed('/dashboard');
   }
 
@@ -27,7 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  // Diálogo de Recuperação (mantido o original com a cor de fundo atualizada)
   void _showRecoveryDialog() {
     showDialog(
       context: context,
@@ -56,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(8.0),
                     child: TextButton(
                       style: TextButton.styleFrom(
-                        backgroundColor: accentColor.withOpacity(0.2), // Usa cor da marca
+                        backgroundColor: accentColor.withOpacity(0.2),
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       ),
                       onPressed: () async {
@@ -102,19 +99,17 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Remove o AppBar
-      body: SingleChildScrollView( // Permite a rolagem em telas pequenas
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 64.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // 1. Logo FinTechPro
             Padding(
               padding: const EdgeInsets.only(top: 40.0, bottom: 40.0),
               child: Image.asset(
-                'assets/fintechpro_logo.png', // **MUDAR PARA O CAMINHO CORRETO DO SEU ASSET**
-                height: 200, // Aumentado para 180
+                'assets/fintechpro_logo.png',
+                height: 200,
               ),
             ),
 
@@ -138,7 +133,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 48),
 
-            // 2. Campo E-mail
             TextFormField(
               controller: _emailController,
               decoration: InputDecoration(
@@ -157,7 +151,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 24),
 
-            // 3. Campo Senha
             TextFormField(
               controller: _passwordController,
               decoration: InputDecoration(
@@ -176,7 +169,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 12),
 
-            // 4. Esqueci a Senha
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
@@ -189,7 +181,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 32),
 
-            // 5. Botão Entrar
             ElevatedButton(
               onPressed: _login,
               style: ElevatedButton.styleFrom(
@@ -211,7 +202,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 40),
 
-            // 6. Criar Conta
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
