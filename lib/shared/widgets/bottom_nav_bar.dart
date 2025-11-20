@@ -1,13 +1,11 @@
-// lib/shared/widgets/bottom_nav_bar.dart
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // <--- ADICIONADO
+import 'package:provider/provider.dart';
 
-// Importações relativas corrigidas
 import '../../features/dashboard/dashboard_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/transactions/accounts_payable_screen.dart';
 import '../../features/transactions/accounts_receivable_screen.dart';
-import '../../core/dart/providers/transaction_provider.dart'; // <--- ADICIONADO
+import '../../core/dart/providers/transaction_provider.dart';
 
 class MainNavigationWrapper extends StatefulWidget {
   const MainNavigationWrapper({super.key});
@@ -41,8 +39,6 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
 
   void _openNewTransactionForm() {
     Navigator.of(context).pushNamed('/new-transaction').then((_) {
-      // Quando o formulário fechar, atualiza os dados
-      // Erros 'Provider' e 'TransactionProvider' corrigidos aqui
       Provider.of<TransactionProvider>(context, listen: false)._refreshData();
     });
   }
@@ -50,7 +46,6 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Usar IndexedStack preserva o estado de rolagem de cada tela
       body: IndexedStack(
         index: _currentIndex,
         children: _pages,
@@ -59,22 +54,22 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
       floatingActionButton: FloatingActionButton(
         onPressed: _openNewTransactionForm,
         elevation: 2.0,
-        backgroundColor: Color(0xFFC0DAE5), // <-- ADICIONE: Cor de fundo
-        foregroundColor: Colors.black, // <-- ADICIONE: Cor do ícone (+)
+        backgroundColor: const Color(0xFF273238),
+        foregroundColor: Colors.white,
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
       bottomNavigationBar: BottomAppBar(
-            color: Color(0xFFC0DAE5), // <-- CORRIGIDO AQUI
-            shape: const CircularNotchedRectangle(),
-            notchMargin: 6.0,
+        color: const Color(0xFF273238),
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 6.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildNavItem(icon: Icons.dashboard, label: 'Dashboard', index: 0),
             _buildNavItem(icon: Icons.arrow_upward, label: 'A Pagar', index: 1),
-            const SizedBox(width: 48), // Espaço para o FAB
+            const SizedBox(width: 48),
             _buildNavItem(icon: Icons.arrow_downward, label: 'A Receber', index: 3),
             _buildNavItem(icon: Icons.person, label: 'Perfil', index: 4),
           ],
@@ -88,7 +83,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
     final isSelected = (pageIndex == _currentIndex);
 
     return IconButton(
-      icon: Icon(icon, color: isSelected ? Colors.blue : Colors.black
+      icon: Icon(icon, color: isSelected ? Colors.white : Colors.black
       ),
       tooltip: label,
       onPressed: () => _onTap(index),

@@ -84,18 +84,37 @@ class DatabaseHelper {
     return await db.insert('transactions', transaction.toMap());
   }
 
-  Future<List<TransactionModel>> getAccountsPayable({String status = 'pendente'}) async {
+  Future<List<TransactionModel>> getAccountsPayable({
+    String status = 'pendente',
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     final db = await instance.database;
+
+    String whereClause = 'type = ?';
+    List<Object?> whereArgs = ['despesa'];
+
+    if (status.toLowerCase() != 'todos') {
+      whereClause += ' AND status = ?';
+      whereArgs.add(status);
+    }
+
+    if (startDate != null && endDate != null) {
+      whereClause += ' AND dueDate BETWEEN ? AND ?';
+      whereArgs.add(startDate.toIso8601String());
+      whereArgs.add(endDate.toIso8601String());
+    }
+
     final maps = await db.query(
       'transactions',
-      where: 'type = ? AND status LIKE ?',
-      whereArgs: ['despesa', status == 'todos' ? '%' : status],
+      where: whereClause,
+      whereArgs: whereArgs,
       orderBy: 'dueDate ASC',
     );
     return maps.map((json) => TransactionModel.fromMap(json)).toList();
   }
 
-  Future<List<TransactionModel>> getAccountsReceivable({String status = 'pendente'}) async {
+  Future<List<TransactionModel>> getAccountsReceivable({String status = 'pendente', DateTime? startDate, DateTime? endDate}) async {
     final db = await instance.database;
     final maps = await db.query(
       'transactions',

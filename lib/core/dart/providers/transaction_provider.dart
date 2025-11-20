@@ -59,18 +59,38 @@ class TransactionProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchAccountsPayable({String status = 'pendente'}) async {
+  Future<void> fetchAccountsPayable({
+    String status = 'pendente',
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     _isLoading = true;
     notifyListeners();
-    _accountsPayable = await _dbHelper.getAccountsPayable(status: status);
+
+    _accountsPayable = await _dbHelper.getAccountsPayable(
+      status: status,
+      startDate: startDate,
+      endDate: endDate,
+    );
+
     _isLoading = false;
     notifyListeners();
   }
 
-  Future<void> fetchAccountsReceivable({String status = 'pendente'}) async {
+  Future<void> fetchAccountsReceivable({
+    String status = 'pendente',
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     _isLoading = true;
     notifyListeners();
-    _accountsReceivable = await _dbHelper.getAccountsReceivable(status: status);
+
+    _accountsReceivable = await _dbHelper.getAccountsReceivable(
+      status: status,
+      startDate: startDate,
+      endDate: endDate,
+    );
+
     _isLoading = false;
     notifyListeners();
   }
