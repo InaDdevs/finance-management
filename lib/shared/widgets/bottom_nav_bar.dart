@@ -83,7 +83,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
     final isSelected = (pageIndex == _currentIndex);
 
     return IconButton(
-      icon: Icon(icon, color: isSelected ? Colors.white : Colors.black
+      icon: Icon(icon, color: isSelected ? Colors.lightBlueAccent : Colors.white
       ),
       tooltip: label,
       onPressed: () => _onTap(index),
