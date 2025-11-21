@@ -401,7 +401,7 @@ class _AccountsReceivableScreenState extends State<AccountsReceivableScreen> {
         value: selectedValue,
         icon: const Icon(Icons.calendar_today, color: Colors.white, size: 20),
         hint: Text(_displayPeriod, style: const TextStyle(color: Colors.white)),
-        style: const TextStyle(color: _primaryColor, fontSize: 16),
+        style: const TextStyle(color: _primaryColor, fontSize: 14),
         dropdownColor: _primaryColor,
         items: dropdownItems.map((String value) {
           return DropdownMenuItem<String>(

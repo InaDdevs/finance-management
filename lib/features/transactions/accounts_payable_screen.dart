@@ -349,7 +349,7 @@ class _AccountsPayableScreenState extends State<AccountsPayableScreen> {
     return DropdownButton<String>(
       value: _filterPeriod,
       dropdownColor: _primaryColor,
-      icon: const Icon(Icons.calendar_today, color: Colors.white),
+      icon: const Icon(Icons.calendar_today, color: Colors.white, size: 20),
       underline: Container(),
       style: const TextStyle(color: Colors.white),
 
