@@ -5,11 +5,12 @@ import 'account_settings_screen.dart';
 import 'manage_categories_screen.dart';
 import 'manage_accounts_screen.dart';
 
+
 const Color _primaryColor = Color(0xFF273238);
-const Color _secondaryColor = Color(0xFFFFFFFF);
-const Color _accentColor = Color(0xFF4DD0E1);
-const Color _backgroundColor = Color(0xFF535760);
-const Color _cardColor = Color(0xFF2C3940);
+const Color _secondaryColor = Color(0xFF4DD0E1);
+const Color _accentColor = Color(0xFF273238);
+const Color _backgroundColor = Color(0xFFFFFFFF);
+const Color _cardColor = Color(0xFFF0F0F0);
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -29,7 +30,7 @@ class ProfileScreen extends StatelessWidget {
         color: _cardColor,
         borderRadius: BorderRadius.circular(12),
         elevation: 4,
-        shadowColor: iconColor.withOpacity(0.2),
+        shadowColor: Colors.black12,
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(12),
@@ -69,134 +70,135 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const gradientBackground = BoxDecoration(
-      gradient: LinearGradient(
-        colors: [_backgroundColor, _primaryColor],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    );
+
 
     return Scaffold(
+
+      backgroundColor: _backgroundColor,
       appBar: AppBar(
+
         title: const Text('Perfil e Configurações', style: TextStyle(color: Colors.white)),
         backgroundColor: _primaryColor,
         elevation: 0,
         centerTitle: true,
       ),
-      body: Container(
-        decoration: gradientBackground,
-        child: ListView(
-          padding: const EdgeInsets.all(20.0),
-          children: [
 
-            Container(
-              padding: const EdgeInsets.only(bottom: 30),
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: _primaryColor,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: _accentColor.withOpacity(0.5), width: 3),
+      body: ListView(
+        padding: const EdgeInsets.all(20.0),
+        children: [
+
+          Container(
+            padding: const EdgeInsets.only(bottom: 30),
+            child: Column(
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundColor: _primaryColor,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      // Cor da borda
+                      border: Border.all(color: _secondaryColor.withOpacity(0.5), width: 3),
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.person,
+                        size: 50,
+                        color: _secondaryColor,
                       ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.person,
-                          size: 50,
-                          color: _accentColor,
-                        ),
-                      ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Nome do Usuário',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      letterSpacing: 1.0,
-                    ),
+                ),
+                const SizedBox(height: 16),
+
+                const Text(
+                  'Nome do Usuário',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: _accentColor,
+                    letterSpacing: 1.0,
                   ),
-                  const Text(
-                    'admin@email.com',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: _secondaryColor,
-                    ),
+                ),
+
+                Text(
+                  'admin@email.com',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: _accentColor.withOpacity(0.8),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+          ),
 
 
+          _buildProfileMenuItem(
+            context: context,
+            icon: Icons.bar_chart,
+            title: 'Relatórios',
+            iconColor: _primaryColor,
+            textColor: _primaryColor,
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const ReportsScreen()),
+              );
+            },
+          ),
 
-            _buildProfileMenuItem(
-              context: context,
-              icon: Icons.bar_chart,
-              title: 'Relatórios',
-              iconColor: _accentColor,
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const ReportsScreen()),
-                );
-              },
-            ),
+          _buildProfileMenuItem(
+            context: context,
+            icon: Icons.settings,
+            title: 'Configurações da Conta',
+            iconColor: _primaryColor,
+            textColor: _primaryColor,
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const AccountSettingsScreen()),
+              );
+            },
+          ),
 
-            _buildProfileMenuItem(
-              context: context,
-              icon: Icons.settings,
-              title: 'Configurações da Conta',
-              iconColor: _accentColor,
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const AccountSettingsScreen()),
-                );
-              },
-            ),
+          _buildProfileMenuItem(
+            context: context,
+            icon: Icons.category,
+            title: 'Gerenciar Categorias',
+            iconColor: _primaryColor,
+            textColor: _primaryColor,
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const ManageCategoriesScreen()),
+              );
+            },
+          ),
 
-            _buildProfileMenuItem(
-              context: context,
-              icon: Icons.category,
-              title: 'Gerenciar Categorias',
-              iconColor: _accentColor,
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const ManageCategoriesScreen()),
-                );
-              },
-            ),
-
-            _buildProfileMenuItem(
-              context: context,
-              icon: Icons.account_balance,
-              title: 'Gerenciar Contas',
-              iconColor: _accentColor,
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const ManageAccountsScreen()),
-                );
-              },
-            ),
-            const SizedBox(height: 30),
+          _buildProfileMenuItem(
+            context: context,
+            icon: Icons.account_balance,
+            title: 'Gerenciar Contas',
+            iconColor: _primaryColor,
+            textColor: _primaryColor,
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const ManageAccountsScreen()),
+              );
+            },
+          ),
+          const SizedBox(height: 30),
 
 
-            _buildProfileMenuItem(
-              context: context,
-              icon: Icons.logout,
-              title: 'Sair',
-              iconColor: Colors.redAccent,
-              textColor: Colors.redAccent,
-              isLogout: true,
-              onTap: () {
-                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-              },
-            ),
-          ],
-        ),
+          _buildProfileMenuItem(
+            context: context,
+            icon: Icons.logout,
+            title: 'Sair',
+            iconColor: Colors.redAccent,
+            textColor: Colors.redAccent,
+            isLogout: true,
+            onTap: () {
+              Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+            },
+          ),
+        ],
       ),
     );
   }

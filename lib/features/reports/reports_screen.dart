@@ -5,6 +5,11 @@ import 'package:provider/provider.dart';
 import '../../core/dart/providers/transaction_provider.dart';
 import '../../models/transaction_model.dart';
 
+const Color _primaryColor = Color(0xFF273238);
+const Color _secondaryColor = Color(0xFF4DD0E1);
+const Color _accentColor = Color(0xFF273238);
+const Color _backgroundColor = Color(0xFFFFFFFF);
+
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key});
 
@@ -63,7 +68,11 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
     final formattedEndDate = DateFormat('dd/MM/yy').format(_endDate);
 
     return Scaffold(
+      backgroundColor: _backgroundColor,
       appBar: AppBar(
+        backgroundColor: _primaryColor,
+        foregroundColor: Colors.white,
+
         title: const Text('Relatórios'),
         actions: [
           IconButton(
@@ -74,25 +83,31 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(80.0),
-          child: Column(
-            children: [
-              Text(
-                'Período: $formattedStartDate - $formattedEndDate',
-                style: const TextStyle(fontSize: 12),
-              ),
-              TabBar(
-                controller: _tabController,
-                tabs: const [
-                  Tab(icon: Icon(Icons.list_alt), text: 'Extrato'),
-                  Tab(icon: Icon(Icons.pie_chart), text: 'Categorias'),
-                ],
-              ),
-            ],
+          child: Container(
+            color: _backgroundColor,
+            child: Column(
+              children: [
+                Text(
+                  'Período: $formattedStartDate - $formattedEndDate',
+                  style: TextStyle(fontSize: 14, color: _accentColor.withOpacity(0.8)),
+                ),
+                TabBar(
+                  controller: _tabController,
+                  labelColor: _accentColor,
+                  unselectedLabelColor: _accentColor.withOpacity(0.5),
+                  indicatorColor: _secondaryColor,
+                  tabs: const [
+                    Tab(icon: Icon(Icons.list_alt), text: 'Extrato'),
+                    Tab(icon: Icon(Icons.pie_chart), text: 'Categorias'),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
       body: provider.isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: _primaryColor))
           : TabBarView(
         controller: _tabController,
         children: [
@@ -105,7 +120,7 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
 
   Widget _buildStatementTab(List<TransactionModel> transactions) {
     if (transactions.isEmpty) {
-      return const Center(child: Text('Nenhuma transação no período.'));
+      return const Center(child: Text('Nenhuma transação no período.', style: TextStyle(color: _accentColor)));
     }
 
     return ListView.builder(
@@ -124,19 +139,21 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
 
   Widget _buildCategoryTab(Map<String, double> categorySummary) {
     if (categorySummary.isEmpty) {
-      return const Center(child: Text('Nenhuma despesa no período.'));
+      return const Center(child: Text('Nenhuma despesa no período.', style: TextStyle(color: _accentColor)));
     }
 
     return ListView(
       padding: const EdgeInsets.all(8.0),
       children: categorySummary.entries.map((entry) {
         return Card(
+          color: _backgroundColor,
+          elevation: 2,
           child: ListTile(
-            leading: const Icon(Icons.category),
-            title: Text(entry.key),
+            leading: const Icon(Icons.category, color: _primaryColor),
+            title: Text(entry.key, style: const TextStyle(color: _accentColor)),
             trailing: Text(
               currencyFormat.format(entry.value),
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: _accentColor),
             ),
           ),
         );
@@ -158,8 +175,8 @@ class _ReportsScreenState extends State<ReportsScreen> with TickerProviderStateM
         type == TransactionType.receita ? Icons.arrow_downward : Icons.arrow_upward,
         color: color,
       ),
-      title: Text(title),
-      subtitle: Text(date),
+      title: Text(title, style: const TextStyle(color: _accentColor)),
+      subtitle: Text(date, style: TextStyle(color: _accentColor.withOpacity(0.7))),
       trailing: Text(
         '$sign ${currencyFormat.format(value)}',
         style: TextStyle(color: color, fontWeight: FontWeight.bold),
