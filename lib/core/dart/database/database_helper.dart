@@ -16,7 +16,7 @@ class DatabaseHelper {
 
     _dbCompleter = Completer<Database>();
     try {
-      final db = await _initDB('transactions.db');
+      final db = await _initDB('transactions_v2.db');
       _database = db;
       _dbCompleter!.complete(db);
     } catch (e) {
@@ -38,6 +38,7 @@ class DatabaseHelper {
     const realType = 'REAL NOT NULL';
     const textTypeNull = 'TEXT NULL';
 
+    // 1. Tabela de Transações
     await db.execute('''
     CREATE TABLE transactions (
       id $idType,
@@ -53,7 +54,40 @@ class DatabaseHelper {
       attachmentPath $textTypeNull
     )
     ''');
+
+
+    await db.execute('''
+    CREATE TABLE users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      email TEXT UNIQUE NOT NULL,
+      password TEXT NOT NULL,
+      name TEXT
+    )
+    ''');
   }
+
+  Future<Map<String, dynamic>?> getUser(String email, String password) async {
+    final db = await instance.database;
+    final maps = await db.query(
+      'users',
+      where: 'email = ? AND password = ?',
+      whereArgs: [email, password],
+    );
+
+    if (maps.isNotEmpty) {
+      return maps.first;
+    }
+    return null;
+  }
+
+  Future<int> registerUser(Map<String, dynamic> row) async {
+    final db = await instance.database;
+    return await db.insert('users', row);
+  }
+
+  // ====================================================
+  // MÉTODOS DE TRANSAÇÕES (SEU CÓDIGO ORIGINAL)
+  // ====================================================
 
   Future<Map<String, double>> getExpenseSummaryByCategory(DateTime start, DateTime end) async {
     final db = await instance.database;

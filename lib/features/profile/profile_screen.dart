@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import '../../core/dart/providers/auth_provider.dart';
 import '../reports/reports_screen.dart';
 import 'account_settings_screen.dart';
 import 'manage_categories_screen.dart';
 import 'manage_accounts_screen.dart';
-
 
 const Color _primaryColor = Color(0xFF273238);
 const Color _secondaryColor = Color(0xFF4DD0E1);
@@ -71,22 +71,20 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
-
       backgroundColor: _backgroundColor,
       appBar: AppBar(
-
         title: const Text('Perfil e Configurações', style: TextStyle(color: Colors.white)),
         backgroundColor: _primaryColor,
         elevation: 0,
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
-
       body: ListView(
         padding: const EdgeInsets.all(20.0),
         children: [
-
           Container(
             padding: const EdgeInsets.only(bottom: 30),
             child: Column(
@@ -97,7 +95,6 @@ class ProfileScreen extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      // Cor da borda
                       border: Border.all(color: _secondaryColor.withOpacity(0.5), width: 3),
                     ),
                     child: const Center(
@@ -111,9 +108,10 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
 
-                const Text(
-                  'Nome do Usuário',
-                  style: TextStyle(
+                // --- NOME DINÂMICO ---
+                Text(
+                  authProvider.userName ?? 'Usuário',
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: _accentColor,
@@ -121,8 +119,9 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
 
+                // --- EMAIL DINÂMICO ---
                 Text(
-                  'admin@email.com',
+                  authProvider.userEmail ?? 'Email não informado',
                   style: TextStyle(
                     fontSize: 14,
                     color: _accentColor.withOpacity(0.8),
@@ -131,7 +130,6 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ),
-
 
           _buildProfileMenuItem(
             context: context,
@@ -184,9 +182,10 @@ class ProfileScreen extends StatelessWidget {
               );
             },
           ),
+
           const SizedBox(height: 30),
 
-
+          // --- BOTÃO SAIR---
           _buildProfileMenuItem(
             context: context,
             icon: Icons.logout,
@@ -195,7 +194,8 @@ class ProfileScreen extends StatelessWidget {
             textColor: Colors.redAccent,
             isLogout: true,
             onTap: () {
-              Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+
+              authProvider.logout();
             },
           ),
         ],
