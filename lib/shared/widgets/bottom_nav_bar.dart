@@ -29,14 +29,11 @@ const ProfileScreen(),            // 3
 ];
 
 void _onTap(int navBarIndex) {
-// O índice 2 é o botão do meio (FAB), então se clicar nele via código (raro), abrimos o form
+
 if (navBarIndex == 2) {
 _openNewTransactionForm();
 return;
 }
-
-// Lógica para pular o índice 2 (que é o espaço do botão flutuante)
-// Se clicou no 3 (Receber), vira página 2. Se clicou no 4 (Perfil), vira página 3.
 int pageIndex = navBarIndex > 2 ? navBarIndex - 1 : navBarIndex;
 
 setState(() {
@@ -46,8 +43,6 @@ _currentIndex = pageIndex;
 
 void _openNewTransactionForm() {
 Navigator.of(context).pushNamed('/new-transaction').then((_) {
-// CORREÇÃO IMPORTANTE:
-// Usamos fetchDashboardData() que é público, em vez de _refreshData()
 Provider.of<TransactionProvider>(context, listen: false).fetchDashboardData();
 });
 }
@@ -55,7 +50,6 @@ Provider.of<TransactionProvider>(context, listen: false).fetchDashboardData();
 @override
 Widget build(BuildContext context) {
 return Scaffold(
-// IndexedStack mantém o estado das telas (não recarrega ao trocar de aba)
 body: IndexedStack(
 index: _currentIndex,
 children: _pages,
@@ -98,7 +92,6 @@ _buildNavItem(icon: Icons.person, label: 'Perfil', index: 4),
 }
 
 Widget _buildNavItem({required IconData icon, required String label, required int index}) {
-// Mesma lógica de conversão de índice para saber se está selecionado
 int pageIndex = index > 2 ? index - 1 : index;
 final isSelected = (pageIndex == _currentIndex);
 

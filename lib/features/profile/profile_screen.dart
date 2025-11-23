@@ -108,7 +108,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
 
-                // --- NOME DINÂMICO ---
+                //NOME DINÂMICO
                 Text(
                   authProvider.userName ?? 'Usuário',
                   style: const TextStyle(
@@ -119,7 +119,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
 
-                // --- EMAIL DINÂMICO ---
+                //EMAIL DINÂMICO
                 Text(
                   authProvider.userEmail ?? 'Email não informado',
                   style: TextStyle(
@@ -185,7 +185,7 @@ class ProfileScreen extends StatelessWidget {
 
           const SizedBox(height: 30),
 
-          // --- BOTÃO SAIR---
+          //BOTÃO SAIR
           _buildProfileMenuItem(
             context: context,
             icon: Icons.logout,

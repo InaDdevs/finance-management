@@ -85,7 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              // --- CAMPO NOME ---
+              //CAMPO NOME
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
@@ -96,7 +96,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 16),
 
-              // --- CAMPO EMAIL ---
+              //CAMPO EMAIL
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(
@@ -114,7 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 16),
 
-              // --- CAMPO SENHA ---
+              //CAMPO SENHA
               TextFormField(
                 controller: _passwordController,
                 decoration: const InputDecoration(
@@ -132,7 +132,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 16),
 
-              // --- CAMPO CONFIRMAR SENHA ---
+              //CAMPO CONFIRMAR SENHA
               TextFormField(
                 controller: _confirmPasswordController,
                 decoration: const InputDecoration(

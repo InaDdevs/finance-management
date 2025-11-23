@@ -1,0 +1,5 @@
+
+1 - flutter pub get
+//Para o proximo precisa ativar nas configuracoes do pc a funcao desenvolvedor. Ou rodar no terminal
+ (ms-settings:developers e depois start ms-settings:developers)//
+2 - flutter pub add url_launcher

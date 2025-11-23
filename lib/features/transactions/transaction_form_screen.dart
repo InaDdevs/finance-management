@@ -32,8 +32,8 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
   final TransactionStatus _status = TransactionStatus.pendente;
 
   final List<String> _expenseCategories = ['Alimentação', 'Moradia', 'Transporte', 'Saúde', 'Educação',
-    'Lazer','Serviços','Dívidas','Investimentos'];
-  final List<String> _revenueCategories = ['Salário', 'Vendas', 'Serviços','Reembolsos','Renda Extra'];
+    'Lazer','Serviços','Dívidas','Investimentos','Outros'];
+  final List<String> _revenueCategories = ['Salário', 'Vendas', 'Serviços','Reembolsos','Renda Extra','Outros'];
   final List<String> _accounts = ['Conta Corrente', 'Dinheiro', 'Poupança','Conta Digital','Tesouro Direto'];
 
   Future<void> _selectDate(BuildContext context, {bool isPaymentDate = false}) async {

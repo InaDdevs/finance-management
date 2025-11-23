@@ -38,7 +38,7 @@ class DatabaseHelper {
     const realType = 'REAL NOT NULL';
     const textTypeNull = 'TEXT NULL';
 
-    // 1. Tabela de Transações
+    // Tabela de Transações
     await db.execute('''
     CREATE TABLE transactions (
       id $idType,
@@ -84,10 +84,7 @@ class DatabaseHelper {
     final db = await instance.database;
     return await db.insert('users', row);
   }
-
-  // ====================================================
-  // MÉTODOS DE TRANSAÇÕES (SEU CÓDIGO ORIGINAL)
-  // ====================================================
+  // MÉTODOS DE TRANSAÇÕES
 
   Future<Map<String, double>> getExpenseSummaryByCategory(DateTime start, DateTime end) async {
     final db = await instance.database;
