@@ -5,8 +5,10 @@ import 'package:provider/provider.dart';
 import '../../core/dart/providers/transaction_provider.dart';
 import '../../models/transaction_model.dart';
 
-const Color _primaryColor = Color(0xFF273238);
-const Color _accentColor = Color(0xFF90A4AE);
+// Cores base para o tema escuro/cinza
+const Color _primaryColor = Color(0xFF273238); // Fundo principal (Scaffold, AppBar, FilterBar)
+const Color _accentColor = Color(0xFF90A4AE); // Cor de destaque secundária (ícones, texto secundário)
+const Color _cardBackgroundColor = Color(0xFF38464F); // Cor dos cartões (mais clara que o fundo)
 
 class AccountsPayableScreen extends StatefulWidget {
   const AccountsPayableScreen({super.key});
@@ -108,6 +110,7 @@ class _AccountsPayableScreenState extends State<AccountsPayableScreen> {
       context: context,
       builder: (ctx) {
         return Container(
+          // Mantém o fundo branco para o modal
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
@@ -165,7 +168,7 @@ class _AccountsPayableScreenState extends State<AccountsPayableScreen> {
     final totalPendente = transactions.fold(0.0, (sum, item) => sum + item.value);
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: _primaryColor, // Fundo escuro coeso
       appBar: AppBar(
         title: const Text('Contas a Pagar', style: TextStyle(color: Colors.white)),
         backgroundColor: _primaryColor,
@@ -177,17 +180,17 @@ class _AccountsPayableScreenState extends State<AccountsPayableScreen> {
         bottom: _buildFilterBar(),
       ),
       body: provider.isLoading
-          ? const Center(child: CircularProgressIndicator(color: _primaryColor))
+          ? const Center(child: CircularProgressIndicator(color: Colors.white))
           : RefreshIndicator(
         onRefresh: _loadTransactions,
-        color: _primaryColor,
+        color: Colors.white, // Cor do indicador de refresh no fundo escuro
         child: Column(
           children: [
             _buildTotalSummaryCard(context, totalPendente),
 
             if (transactions.isEmpty)
               const Expanded(
-                child: Center(child: Text('Nenhuma conta encontrada para o filtro atual.')),
+                child: Center(child: Text('Nenhuma conta encontrada para o filtro atual.', style: TextStyle(color: _accentColor))),
               )
             else
               Expanded(
@@ -209,7 +212,7 @@ class _AccountsPayableScreenState extends State<AccountsPayableScreen> {
   Widget _buildTotalSummaryCard(BuildContext context, double totalPendente) {
     return Card(
       margin: const EdgeInsets.all(12.0),
-      color: Colors.white,
+      color: _cardBackgroundColor, // Fundo do cartão mais claro que o Scaffold
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -218,18 +221,18 @@ class _AccountsPayableScreenState extends State<AccountsPayableScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Chip(
-              label: Text(_filterStatus == 'Todos' ? 'Total Geral' : 'Contas ${_filterStatus}', style: const TextStyle(color: Colors.white)),
-              backgroundColor: _primaryColor,
+              label: Text(_filterStatus == 'Todos' ? 'Total Geral' : 'Contas $_filterStatus', style: const TextStyle(color: Colors.white)),
+              backgroundColor: _primaryColor, // Chip usa a cor primária
             ),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Valor Total:', style: Theme.of(context).textTheme.titleMedium),
+                Text('Valor Total:', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: _accentColor)),
                 Text(
                   currencyFormat.format(totalPendente),
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: _filterStatus == 'Pago' ? Colors.green[700] : _filterStatus == 'Pendente' ? Colors.red[700] : _primaryColor,
+                    color: _filterStatus == 'Pago' ? Colors.greenAccent : _filterStatus == 'Pendente' ? Colors.redAccent : Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -244,32 +247,33 @@ class _AccountsPayableScreenState extends State<AccountsPayableScreen> {
   Widget _buildTransactionCard(BuildContext context, TransactionModel transaction, bool isPending) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+      color: _cardBackgroundColor, // Cartão usa a cor de fundo do Card
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
-        side: isPending ? const BorderSide(color: Colors.red, width: 1.5) : const BorderSide(color: _accentColor, width: 1),
+        side: isPending ? const BorderSide(color: Colors.redAccent, width: 1.5) : BorderSide(color: _accentColor.withOpacity(0.5), width: 1),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         leading: CircleAvatar(
-          backgroundColor: isPending ? Colors.red.shade100 : _accentColor.withOpacity(0.2),
+          backgroundColor: isPending ? Colors.red.shade900.withOpacity(0.3) : _accentColor.withOpacity(0.2),
           child: Icon(
             Icons.money_off,
-            color: isPending ? Colors.red : _accentColor,
+            color: isPending ? Colors.redAccent : _accentColor,
           ),
         ),
         title: Text(
           transaction.description,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: isPending ? Colors.black87 : Colors.grey[600],
+            color: isPending ? Colors.white : _accentColor, // Título branco no fundo escuro
             decoration: isPending ? TextDecoration.none : TextDecoration.lineThrough,
           ),
         ),
         subtitle: Text(
           'Venc: ${DateFormat('dd/MM/yy').format(transaction.dueDate)} | ${transaction.category}',
-          style: TextStyle(
-            color: Colors.grey[600],
+          style: const TextStyle(
+            color: _accentColor, // Subtítulo em cinza claro
           ),
         ),
         trailing: Column(
@@ -280,14 +284,14 @@ class _AccountsPayableScreenState extends State<AccountsPayableScreen> {
               currencyFormat.format(transaction.value),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: isPending ? Colors.red.shade700 : Colors.green.shade700,
+                color: isPending ? Colors.redAccent : Colors.greenAccent,
                 fontSize: 16,
               ),
             ),
             if (!isPending)
               Text(
                 'Pago: ${DateFormat('dd/MM/yy').format(transaction.paymentDate!)}',
-                style: const TextStyle(fontSize: 10, color: Colors.green),
+                style: const TextStyle(fontSize: 10, color: Colors.greenAccent),
               ),
           ],
         ),
@@ -300,15 +304,15 @@ class _AccountsPayableScreenState extends State<AccountsPayableScreen> {
     return PreferredSize(
       preferredSize: const Size.fromHeight(60.0),
       child: Container(
-        color: _primaryColor,
+        color: _primaryColor, // Mantém a cor da AppBar
         padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 8.0),
         alignment: Alignment.centerLeft,
         child: SegmentedButton<String>(
           style: SegmentedButton.styleFrom(
-            backgroundColor: Colors.white.withOpacity(0.9),
-            selectedBackgroundColor: _primaryColor,
-            foregroundColor: _primaryColor,
-            selectedForegroundColor: Colors.white,
+            backgroundColor: _cardBackgroundColor, // Fundo dos botões não selecionados
+            selectedBackgroundColor: _accentColor, // Fundo do botão selecionado
+            foregroundColor: _accentColor, // Cor do texto/ícone não selecionado
+            selectedForegroundColor: Colors.black, // Texto no fundo claro
           ),
           segments: const <ButtonSegment<String>>[
             ButtonSegment<String>(
@@ -369,12 +373,14 @@ class _AccountsPayableScreenState extends State<AccountsPayableScreen> {
             firstDate: DateTime(2000),
             lastDate: DateTime(2100),
             builder: (context, child) {
+              // Estilização do seletor de data para o tema escuro/claro
               return Theme(
-                data: Theme.of(context).copyWith(
-                  colorScheme: const ColorScheme.light(
-                    primary: _primaryColor,
+                data: ThemeData.dark().copyWith(
+                  colorScheme: const ColorScheme.dark(
+                    primary: _primaryColor, // Cor primária no calendário
                     onPrimary: Colors.white,
-                    onSurface: Colors.black,
+                    surface: _cardBackgroundColor, // Cor de fundo do calendário
+                    onSurface: Colors.white,
                   ),
                 ),
                 child: child!,
