@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/dart/providers/auth_provider.dart';
 
-const Color _primaryColor = Color(0xFF626C75);
+const Color _primaryColor = Color(0xFF273238);
 const Color _accentColor = Color(0xFF4DD0E1);
 const Color _cardColor = Color(0xFFF5F5F5);
 
