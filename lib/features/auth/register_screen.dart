@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import '../../core/dart/providers/auth_provider.dart';
 
 // Cores Padrão do Projeto
-const Color _primaryColor = Color(0xFF273238); // Seu cinza escuro
-const Color _lightGreyColor = Color(0xFFF5F5F5); // Fundo muito suave para campos
-const Color _ctaButtonColor = Colors.blue; // Azul vibrante para o botão "Cadastrar"
+const Color _primaryColor = Color(0xFF273238);
+const Color _lightGreyColor = Color(0xFFF5F5F5);
+const Color _ctaButtonColor = Colors.blue;
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -72,33 +72,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  // Widget para aplicar o novo estilo de campo
+
   InputDecoration _getInputDecoration(String label, IconData icon, Color iconColor) {
     return InputDecoration(
       labelText: label,
       labelStyle: TextStyle(color: _primaryColor.withOpacity(0.8)),
-      // CORREÇÃO: Usando o parâmetro 'iconColor' para definir a cor do ícone
+
       prefixIcon: Icon(icon, color: iconColor),
 
-      // Estilo de Campo Limpo e Harmonioso:
+
       filled: true,
-      fillColor: _lightGreyColor, // Fundo suave
+      fillColor: _lightGreyColor,
       contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
 
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none, // Remove a borda padrão forte
+        borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,
       ),
-      // Adiciona a borda cinza (primaryColor) no foco
+
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: _primaryColor, width: 2.0),
       ),
-      // Estilo para erro
+
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: Colors.red, width: 1.5),
@@ -108,15 +108,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Definindo a cor dos ícones para o CTA (azul)
+
     const iconColor = _ctaButtonColor;
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Criar Conta', style: TextStyle(color: Colors.white)),
-        backgroundColor: _primaryColor, // Cor padrão cinza no AppBar
-        iconTheme: const IconThemeData(color: Colors.white), // Cor da seta de voltar
+        backgroundColor: _primaryColor,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -124,19 +124,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              // CAMPO NOME
+
               TextFormField(
                 controller: _nameController,
-                // CORREÇÃO: Passando 'iconColor'
+
                 decoration: _getInputDecoration('Nome (opcional)', Icons.person, iconColor),
-                validator: (value) => null, // Opcional
+                validator: (value) => null,
               ),
               const SizedBox(height: 16),
 
               // CAMPO EMAIL
               TextFormField(
                 controller: _emailController,
-                // CORREÇÃO: Passando 'iconColor'
+
                 decoration: _getInputDecoration('E-mail', Icons.email, iconColor),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
@@ -151,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               // CAMPO SENHA
               TextFormField(
                 controller: _passwordController,
-                // CORREÇÃO: Passando 'iconColor'
+
                 decoration: _getInputDecoration('Senha', Icons.lock, iconColor),
                 obscureText: true,
                 validator: (value) {
@@ -166,7 +166,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               // CAMPO CONFIRMAR SENHA
               TextFormField(
                 controller: _confirmPasswordController,
-                // CORREÇÃO: Passando 'iconColor'
+
                 decoration: _getInputDecoration('Confirmação de Senha', Icons.lock_outline, iconColor),
                 obscureText: true,
                 validator: (value) {
@@ -178,13 +178,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 32),
 
-              // BOTÃO CADASTRAR (AZUL)
+              // BOTÃO CADASTRAR
               SizedBox(
                 height: 50,
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _register,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _ctaButtonColor, // AZUL!
+                    backgroundColor: _ctaButtonColor,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
