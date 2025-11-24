@@ -38,7 +38,7 @@ class DatabaseHelper {
     const realType = 'REAL NOT NULL';
     const textTypeNull = 'TEXT NULL';
 
-    // Tabela de Transações
+
     await db.execute('''
     CREATE TABLE transactions (
       id $idType,
@@ -84,7 +84,56 @@ class DatabaseHelper {
     final db = await instance.database;
     return await db.insert('users', row);
   }
-  // MÉTODOS DE TRANSAÇÕES
+
+
+  Future<bool> updateUserName(String userEmail, String newName) async {
+    final db = await instance.database;
+    final rowsAffected = await db.update(
+      'users',
+      {'name': newName},
+      where: 'email = ?',
+      whereArgs: [userEmail],
+    );
+    return rowsAffected == 1;
+  }
+
+  Future<bool> updateUserEmail(String oldEmail, String newEmail) async {
+    final db = await instance.database;
+
+
+    final existingUser = await db.query(
+      'users',
+      where: 'email = ?',
+      whereArgs: [newEmail],
+    );
+
+    if (existingUser.isNotEmpty) {
+      return false;
+    }
+
+    final rowsAffected = await db.update(
+      'users',
+      {'email': newEmail},
+      where: 'email = ?',
+      whereArgs: [oldEmail],
+    );
+    return rowsAffected == 1;
+  }
+
+  Future<bool> updateUserPassword(String userEmail, String newPassword) async {
+    final db = await instance.database;
+
+
+    final rowsAffected = await db.update(
+      'users',
+      {'password': newPassword},
+      where: 'email = ?',
+      whereArgs: [userEmail],
+    );
+
+    return rowsAffected == 1;
+  }
+
 
   Future<Map<String, double>> getExpenseSummaryByCategory(DateTime start, DateTime end) async {
     final db = await instance.database;
@@ -145,12 +194,32 @@ class DatabaseHelper {
     return maps.map((json) => TransactionModel.fromMap(json)).toList();
   }
 
-  Future<List<TransactionModel>> getAccountsReceivable({String status = 'pendente', DateTime? startDate, DateTime? endDate}) async {
+  Future<List<TransactionModel>> getAccountsReceivable({
+    String status = 'pendente',
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     final db = await instance.database;
+
+    String whereClause = 'type = ?';
+    List<Object?> whereArgs = ['receita'];
+
+    if (status.toLowerCase() != 'todos') {
+      whereClause += ' AND status = ?';
+      whereArgs.add(status);
+    }
+
+
+    if (startDate != null && endDate != null) {
+      whereClause += ' AND dueDate BETWEEN ? AND ?';
+      whereArgs.add(startDate.toIso8601String());
+      whereArgs.add(endDate.toIso8601String());
+    }
+
     final maps = await db.query(
       'transactions',
-      where: 'type = ? AND status LIKE ?',
-      whereArgs: ['receita', status == 'todos' ? '%' : status],
+      where: whereClause,
+      whereArgs: whereArgs,
       orderBy: 'dueDate ASC',
     );
     return maps.map((json) => TransactionModel.fromMap(json)).toList();

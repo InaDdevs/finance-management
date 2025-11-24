@@ -58,6 +58,52 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> updateUserName(String newName) async {
+    if (_userEmail == null) return false;
+
+    bool success = await DatabaseHelper.instance.updateUserName(_userEmail!, newName);
+
+    if (success) {
+      _userName = newName;
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userName', newName);
+
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> updateUserEmail(String newEmail) async {
+    if (_userEmail == null || !newEmail.contains('@')) return false;
+
+    bool success = await DatabaseHelper.instance.updateUserEmail(_userEmail!, newEmail);
+
+    if (success) {
+      _userEmail = newEmail;
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userEmail', newEmail);
+
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> updateUserPassword(String currentEmail, String oldPassword, String newPassword) async {
+
+    final user = await DatabaseHelper.instance.getUser(currentEmail, oldPassword);
+
+    if (user != null) {
+
+      bool success = await DatabaseHelper.instance.updateUserPassword(currentEmail, newPassword);
+
+      return success;
+    }
+
+    return false;
+  }
+
   Future<void> logout() async {
     _isAuthenticated = false;
     _userName = null;

@@ -4,7 +4,6 @@ import '../../core/dart/providers/auth_provider.dart';
 import '../reports/reports_screen.dart';
 import 'account_settings_screen.dart';
 
-
 const Color _primaryColor = Color(0xFF273238);
 const Color _secondaryColor = Color(0xFF4DD0E1);
 const Color _accentColor = Color(0xFF273238);
@@ -18,8 +17,8 @@ class ProfileScreen extends StatelessWidget {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
-    Color iconColor = Colors.white,
-    Color textColor = Colors.white,
+    Color iconColor = _accentColor,
+    Color textColor = _accentColor,
     bool isLogout = false,
     required BuildContext context,
   }) {
@@ -69,7 +68,6 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
@@ -106,8 +104,6 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-
-                //NOME DINÂMICO
                 Text(
                   authProvider.userName ?? 'Usuário',
                   style: const TextStyle(
@@ -117,8 +113,6 @@ class ProfileScreen extends StatelessWidget {
                     letterSpacing: 1.0,
                   ),
                 ),
-
-                //EMAIL DINÂMICO
                 Text(
                   authProvider.userEmail ?? 'Email não informado',
                   style: TextStyle(
@@ -129,36 +123,31 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ),
-
           _buildProfileMenuItem(
             context: context,
             icon: Icons.bar_chart,
             title: 'Relatórios',
-            iconColor: _primaryColor,
-            textColor: _primaryColor,
+            iconColor: _secondaryColor,
+            textColor: _accentColor,
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const ReportsScreen()),
               );
             },
           ),
-
           _buildProfileMenuItem(
             context: context,
             icon: Icons.settings,
             title: 'Configurações da Conta',
-            iconColor: _primaryColor,
-            textColor: _primaryColor,
+            iconColor: _secondaryColor,
+            textColor: _accentColor,
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const AccountSettingsScreen()),
               );
             },
           ),
-
           const SizedBox(height: 30),
-
-          //BOTÃO SAIR
           _buildProfileMenuItem(
             context: context,
             icon: Icons.logout,
@@ -167,7 +156,6 @@ class ProfileScreen extends StatelessWidget {
             textColor: Colors.redAccent,
             isLogout: true,
             onTap: () {
-
               authProvider.logout();
             },
           ),
