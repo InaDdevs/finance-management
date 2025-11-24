@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -7,8 +6,11 @@ import '../../models/transaction_model.dart';
 
 const Color _primaryColor = Color(0xFF273238);
 const Color _secondaryColor = Color(0xFF4DD0E1);
-const Color _accentColor = Color(0xFF273238);
+const Color _accentColor = Color(0xFF90A4AE);
 const Color _backgroundColor = Color(0xFFFFFFFF);
+
+const Color _expenseColor = Colors.redAccent;
+const Color _incomeColor = Colors.greenAccent;
 
 class TransactionFormScreen extends StatefulWidget {
   const TransactionFormScreen({super.key});
@@ -49,8 +51,9 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
               primary: _primaryColor,
               onPrimary: Colors.white,
               surface: _backgroundColor,
-              onSurface: _accentColor,
-            ), dialogTheme: const DialogThemeData(backgroundColor: _backgroundColor),
+              onSurface: _primaryColor,
+            ),
+            dialogTheme: DialogThemeData(backgroundColor: _backgroundColor),
           ),
           child: child!,
         );
@@ -101,33 +104,78 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
     super.dispose();
   }
 
-  InputDecoration _customInputDecoration({required String labelText, String? prefixText}) {
+  InputDecoration _customInputDecoration({
+    required String labelText,
+    String? prefixText,
+    Widget? suffixIcon,
+  }) {
+    const Color borderColor = Color(0xFFE0E0E0);
+
     return InputDecoration(
       labelText: labelText,
       prefixText: prefixText,
-      labelStyle: TextStyle(color: _accentColor.withOpacity(0.8)),
-      floatingLabelStyle: const TextStyle(color: _secondaryColor),
-      border: const UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey),
+      labelStyle: const TextStyle(color: _accentColor, fontWeight: FontWeight.w500),
+      floatingLabelStyle: const TextStyle(color: _primaryColor, fontWeight: FontWeight.bold),
+      suffixIcon: suffixIcon,
+
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
+
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: borderColor, width: 1.0),
       ),
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: _accentColor.withOpacity(0.5)),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: borderColor, width: 1.0),
       ),
-      focusedBorder: const UnderlineInputBorder(
-        borderSide: BorderSide(color: _secondaryColor, width: 2.0),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: _secondaryColor, width: 2.0),
       ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: Colors.red, width: 1.5),
+      ),
+    );
+  }
+
+  ButtonStyle _getSegmentedButtonStyle(TransactionType currentType) {
+    return ButtonStyle(
+      foregroundColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+        if (states.contains(WidgetState.selected)) {
+          return currentType == TransactionType.despesa ? _expenseColor : _incomeColor;
+        }
+        return _primaryColor;
+      }),
+      backgroundColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+        if (states.contains(WidgetState.selected)) {
+          return currentType == TransactionType.despesa ? _expenseColor.withOpacity(0.1) : _incomeColor.withOpacity(0.1);
+        }
+        return Colors.white;
+      }),
+      side: WidgetStateProperty.resolveWith<BorderSide>((Set<WidgetState> states) {
+        if (states.contains(WidgetState.selected)) {
+          return BorderSide(color: currentType == TransactionType.despesa ? _expenseColor : _incomeColor, width: 1.5);
+        }
+        return const BorderSide(color: Color(0xFFE0E0E0), width: 1.0);
+      }),
+      shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final currentSegmentStyle = _getSegmentedButtonStyle(_type);
+
     return Scaffold(
       backgroundColor: _backgroundColor,
       appBar: AppBar(
         title: const Text('Registrar Transação', style: TextStyle(color: Colors.white)),
         backgroundColor: _primaryColor,
         foregroundColor: Colors.white,
-        elevation: 0,
+        elevation: 1,
       ),
       body: Form(
         key: _formKey,
@@ -154,82 +202,80 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
                   _category = _type == TransactionType.despesa ? _expenseCategories[0] : _revenueCategories[0];
                 });
               },
-              style: ButtonStyle(
-                foregroundColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return _type == TransactionType.despesa ? Colors.red : Colors.green;
-                  }
-                  return _accentColor.withOpacity(0.7);
-                }),
-                backgroundColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return _secondaryColor.withOpacity(0.3);
-                  }
-                  return _backgroundColor;
-                }),
-                side: WidgetStateProperty.all(BorderSide(color: _secondaryColor.withOpacity(0.5))),
-              ),
+              style: currentSegmentStyle,
+              emptySelectionAllowed: false,
             ),
+            const SizedBox(height: 24),
 
-            const SizedBox(height: 16),
             TextFormField(
               controller: _valueController,
-              decoration: _customInputDecoration(labelText: 'Valor (R\$)', prefixText: 'R\$ '),
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              style: const TextStyle(color: _accentColor),
+              decoration: _customInputDecoration(labelText: 'Valor', prefixText: 'R\$ '),
+              style: const TextStyle(color: _primaryColor, fontSize: 16),
               validator: (value) => (value == null || value.isEmpty) ? 'Campo obrigatório' : null,
             ),
             const SizedBox(height: 16),
+
             TextFormField(
               controller: _descriptionController,
               decoration: _customInputDecoration(labelText: 'Descrição'),
-              style: const TextStyle(color: _accentColor),
+              style: const TextStyle(color: _primaryColor, fontSize: 16),
               validator: (value) => (value == null || value.isEmpty) ? 'Campo obrigatório' : null,
             ),
             const SizedBox(height: 16),
+
             DropdownButtonFormField<String>(
               value: _category,
               decoration: _customInputDecoration(labelText: 'Categoria'),
               dropdownColor: _backgroundColor,
-              style: const TextStyle(color: _accentColor),
+              style: const TextStyle(color: _primaryColor, fontSize: 16),
               items: (_type == TransactionType.despesa ? _expenseCategories : _revenueCategories)
-                  .map((cat) => DropdownMenuItem(value: cat, child: Text(cat, style: const TextStyle(color: _accentColor))))
+                  .map((cat) => DropdownMenuItem(value: cat, child: Text(cat, style: const TextStyle(color: _primaryColor))))
                   .toList(),
               onChanged: (value) => setState(() => _category = value!),
             ),
             const SizedBox(height: 16),
+
             DropdownButtonFormField<String>(
               value: _account,
               decoration: _customInputDecoration(labelText: 'Conta'),
               dropdownColor: _backgroundColor,
-              style: const TextStyle(color: _accentColor),
+              style: const TextStyle(color: _primaryColor, fontSize: 16),
               items: _accounts
-                  .map((acc) => DropdownMenuItem(value: acc, child: Text(acc, style: const TextStyle(color: _accentColor))))
+                  .map((acc) => DropdownMenuItem(value: acc, child: Text(acc, style: const TextStyle(color: _primaryColor))))
                   .toList(),
               onChanged: (value) => setState(() => _account = value!),
             ),
             const SizedBox(height: 16),
+
             ListTile(
-              title: const Text('Data de Vencimento/Previsão', style: TextStyle(color: _accentColor)),
-              subtitle: Text(DateFormat('dd/MM/yyyy').format(_dueDate), style: TextStyle(color: _accentColor.withOpacity(0.7))),
+              contentPadding: EdgeInsets.zero,
+              title: Text('Data de Vencimento/Previsão', style: TextStyle(color: _primaryColor.withOpacity(0.8))),
+              subtitle: Text(DateFormat('dd/MM/yyyy').format(_dueDate), style: const TextStyle(color: _primaryColor, fontSize: 16)),
               trailing: const Icon(Icons.calendar_today, color: _primaryColor),
               onTap: () => _selectDate(context),
             ),
+            const Divider(height: 1),
+
             ListTile(
-              title: const Text('Data de Pagamento (Opcional)', style: TextStyle(color: _accentColor)),
+              contentPadding: EdgeInsets.zero,
+              title: Text('Data de Pagamento (Opcional)', style: TextStyle(color: _primaryColor.withOpacity(0.8))),
               subtitle: Text(_paymentDate == null
                   ? 'Pendente'
                   : DateFormat('dd/MM/yyyy').format(_paymentDate!),
-                  style: TextStyle(color: _paymentDate == null ? Colors.redAccent : _accentColor.withOpacity(0.7))),
+                  style: TextStyle(color: _paymentDate == null ? _expenseColor : _primaryColor, fontSize: 16)),
               trailing: const Icon(Icons.calendar_today, color: _primaryColor),
               onTap: () => _selectDate(context, isPaymentDate: true),
             ),
+            const Divider(height: 1),
+
             const SizedBox(height: 32),
+
             ElevatedButton(
               onPressed: _saveTransaction,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _secondaryColor,
-                foregroundColor: _primaryColor,
+                foregroundColor: Colors.black,
                 padding: const EdgeInsets.symmetric(vertical: 14.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
