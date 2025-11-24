@@ -3,8 +3,7 @@ import 'package:provider/provider.dart';
 import '../../core/dart/providers/auth_provider.dart';
 import '../reports/reports_screen.dart';
 import 'account_settings_screen.dart';
-import 'manage_categories_screen.dart';
-import 'manage_accounts_screen.dart';
+
 
 const Color _primaryColor = Color(0xFF273238);
 const Color _secondaryColor = Color(0xFF4DD0E1);
@@ -153,32 +152,6 @@ class ProfileScreen extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const AccountSettingsScreen()),
-              );
-            },
-          ),
-
-          _buildProfileMenuItem(
-            context: context,
-            icon: Icons.category,
-            title: 'Gerenciar Categorias',
-            iconColor: _primaryColor,
-            textColor: _primaryColor,
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const ManageCategoriesScreen()),
-              );
-            },
-          ),
-
-          _buildProfileMenuItem(
-            context: context,
-            icon: Icons.account_balance,
-            title: 'Gerenciar Contas',
-            iconColor: _primaryColor,
-            textColor: _primaryColor,
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const ManageAccountsScreen()),
               );
             },
           ),
